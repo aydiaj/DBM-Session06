@@ -1,0 +1,1989 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#102d49">
+    <meta name="description"
+        content="DBM Session 06: single-entity EF Core CRUD, change tracking, guided Console tasks and simulated database lab.">
+    <title>DBM · Session 06 · EF Core CRUD and Change Tracking</title>
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/codelab.css">
+    <link rel="stylesheet" href="css/session05.css">
+    <link rel="stylesheet" href="css/session06.css">
+    <script defer src="js/session06.js"></script>
+</head>
+
+<body class="s4 s5 s6">
+    <a class="skip-link" href="#s6-content">Skip to learning content</a>
+    <div class="shell">
+        <button id="s6-scrim" class="scrim mobile-scrim" aria-label="Close navigation" hidden></button>
+        <aside class="sidebar" id="s6-sidebar" aria-label="Lesson navigation">
+            <div class="brand">
+                <span class="brand-mark" aria-hidden="true">▤</span>
+                <div>
+                    <small>TVET INTERACTIVE</small><strong>CODELAB STUDIO</strong>
+                </div>
+                <button class="icon-button close-menu icon-btn" id="s6-close" aria-label="Close navigation">×</button>
+            </div>
+            <div class="course-block">
+                <span class="course-code">DBM · PDB2 · 2026–2027</span>
+                <h2>Database<br>Management</h2>
+                <p>06 / EF Core CRUD and change tracking</p>
+                <div class="progress-heading">
+                    <span>Lesson progress</span><strong id="s6-progress-text">0 / 8</strong>
+                </div>
+                <div class="progress-bar" id="s6-progress" role="progressbar" aria-label="Completed lesson steps"
+                    aria-valuemin="0" aria-valuemax="8" aria-valuenow="0">
+                    <div id="s6-progress-fill"></div>
+                </div>
+            </div>
+            <nav aria-label="Lesson sections">
+                <ol class="step-nav">
+                    <li><button class="step-link" data-step="0" aria-controls="s6-panel-0"><span
+                                class="step-num">01</span><span>From LINQ to CRUD<small>8 min</small></span><span
+                                class="tick" aria-hidden="true">✓</span></button></li>
+                    <li><button class="step-link" data-step="1" aria-controls="s6-panel-1"><span
+                                class="step-num">02</span><span>Prepare the practice database<small>10
+                                    min</small></span><span class="tick" aria-hidden="true">✓</span></button></li>
+                    <li><button class="step-link" data-step="2" aria-controls="s6-panel-2"><span
+                                class="step-num">03</span><span>Read an item: tracking choices<small>16
+                                    min</small></span><span class="tick" aria-hidden="true">✓</span></button></li>
+                    <li><button class="step-link" data-step="3" aria-controls="s6-panel-3"><span
+                                class="step-num">04</span><span>Create and save an item<small>14 min</small></span><span
+                                class="tick" aria-hidden="true">✓</span></button></li>
+                    <li><button class="step-link" data-step="4" aria-controls="s6-panel-4"><span
+                                class="step-num">05</span><span>Update a tracked entity<small>16 min</small></span><span
+                                class="tick" aria-hidden="true">✓</span></button></li>
+                    <li><button class="step-link" data-step="5" aria-controls="s6-panel-5"><span
+                                class="step-num">06</span><span>Confirm and delete<small>12 min</small></span><span
+                                class="tick" aria-hidden="true">✓</span></button></li>
+                    <li><button class="step-link" data-step="6" aria-controls="s6-panel-6"><span
+                                class="step-num">07</span><span>Explore change tracking<small>24 min</small></span><span
+                                class="tick" aria-hidden="true">✓</span></button></li>
+                    <li><button class="step-link" data-step="7" aria-controls="s6-panel-7"><span
+                                class="step-num">08</span><span>Challenge, review and submit<small>20
+                                    min</small></span><span class="tick" aria-hidden="true">✓</span></button></li>
+                </ol>
+            </nav>
+            <div class="sidebar-resources"><span>QUICK REFERENCES</span><a href="downloads/CRUD_Quick_Reference.md"
+                    download>↓ CRUD &amp; states</a><a href="downloads/LINQ_Quick_Reference.pdf" target="_blank"
+                    rel="noopener">↗ LINQ quick reference</a><a href="downloads/EF10_Session06_Student_Starter.zip"
+                    download>↓ Student starter</a><a href="downloads/setup-inventory.sql" download>↓ SQL setup
+                    script</a><a href="#sources" id="s6-sources-link">↗ Sources and downloads</a><button id="s6-reset"
+                    type="button">↺ Reset this session</button><small id="s6-storage-status">Progress and notes save on
+                    this device.</small></div>
+            <div class="sidebar-foot">UNRWA Gaza Training Centre<br>Programming and Database Level 2<br>Eng. Abeer
+                Elaydi</div>
+        </aside>
+        <div class="workspace">
+            <header class="topbar"><button class="icon-button menu-button icon-btn menu-btn" id="s6-menu"
+                    aria-label="Open lesson navigation" aria-controls="s6-sidebar" aria-expanded="false">☰</button>
+                <div class="breadcrumb">DATABASE MANAGEMENT <span>/</span> <b>SESSION 06</b>
+                </div>
+                <div class="top-actions">
+                    <span class="time-pill">◷ 120 MIN</span><button class="icon-button icon-btn" id="s6-theme"
+                        aria-label="Switch to dark theme" aria-pressed="false">◐</button>
+                </div>
+            </header>
+            <main id="s6-content" class="main" tabindex="-1">
+                <section class="lesson" id="s6-panel-0" aria-labelledby="s6-title-0">
+                    <div class="hero hero-intro">
+                        <div class="hero-main"><span class="eyebrow">TVET INTERACTIVE CODELAB STUDIO · SESSION 06</span>
+                            <h1>Your EF Core<br><em>CRUD toolkit</em></h1>
+                            <p>Work with objects.<br>Save real database changes.</p>
+                            <div class="chips"><span>DBM · PDB2</span><span>EF Core 10</span><span>120 minutes</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-head"><span class="section-kicker">STEP 01 / 08 · 8 MINUTES</span>
+                        <h1 id="s6-title-0" tabindex="-1">From LINQ to CRUD</h1>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>What you will be able to do</h2>
+                        <p><strong>Today’s competency:</strong> use EF Core to create, retrieve, edit and delete
+                            inventory records in SQL Server, verify each result, and explain how change tracking works.
+                        </p>
+                        <ul>
+                            <li>Choose a tracked or no-tracking read, retrieve an item by its key, and handle a missing
+                                record.</li>
+                            <li>Create an item and report its database-generated ID.</li>
+                            <li>Update a tracked entity without calling Update().</li>
+                            <li>Confirm and delete a practice item safely.</li>
+                            <li>Predict entity states and what SaveChangesAsync() will write.</li>
+                        </ul>
+                        <div class="s05-facts">
+                            <div><b>100</b><span>Guided minutes</span></div>
+                            <div><b>20</b><span>Independent minutes</span></div>
+                            <div><b>8</b><span>Learning steps</span></div>
+                        </div>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Recall the EF Core journey</h2>
+                        <p>In Session 05 we connected our C# inventory app to SQL Server and used LINQ to read data.
+                            Select any familiar checkpoint to recall how we got there.</p>
+                        <ol class="s05-journey" id="journey-nav"></ol>
+                        <div class="s05-live" id="journey-detail" aria-live="polite"></div>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>From asking questions to managing inventory</h2>
+                        <p>Recall this Session 05 task: list active items that are in stock.</p>
+                        <div class="code-shell">
+                            <div class="code-head"><span>Session 05 · read inventory with LINQ</span><button
+                                    class="copy copy-btn" type="button">Copy code</button></div>
+                            <pre tabindex="0"><code>var items = await db.Items
+    .Where(item =&gt; item.IsActive &amp;&amp; item.Stock &gt; 0)
+    .OrderBy(item =&gt; item.Name)
+    .ToListAsync();</code></pre>
+                        </div>
+                        <p>The query returns Item objects for a report. It does not change the stored rows.</p>
+                        <p>Today we will build a small inventory management app that does more than report data. We will
+                            learn how EF Core can save the changes we make.</p>
+                        <div class="s06-flow" aria-label="New inventory requirements">
+                            <div class="s06-flow-node"><span>1</span><strong>Read</strong>
+                                <p>Find an inventory item by its ID.</p>
+                            </div>
+                            <div class="s06-flow-node"><span>2</span><strong>Change</strong>
+                                <p>Add a new item, change its price, or remove it when it is no longer needed.</p>
+                            </div>
+                            <div class="s06-flow-node"><span>3</span><strong>Verify</strong>
+                                <p>Read the data again in the Console and confirm the result in SSMS.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card s2-card">
+                        <h2>CRUD: four things we do with records</h2>
+                        <div class="table-wrap s2-table-wrap" tabindex="0" role="region"
+                            aria-label="CRUD compared with SQL">
+                            <table class="s2-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Operation</th>
+                                        <th scope="col">SQL</th>
+                                        <th scope="col">What we will do</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><b>Create</b></td>
+                                        <td>INSERT</td>
+                                        <td>Create a new Item</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Read</b></td>
+                                        <td>SELECT</td>
+                                        <td>Retrieve existing Items</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Update</b></td>
+                                        <td>UPDATE</td>
+                                        <td>Change an Item and save</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Delete</b></td>
+                                        <td>DELETE</td>
+                                        <td>Remove an Item and save</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p>We will practise in the book’s order: <strong>Read → Create → Update → Delete</strong>.
+                            Reading lets us check every change.</p>
+                    </div>
+                    <aside class="teacher-note s2-note"><img class="s2-note__mascot" src="images/db-mascot-teacher.webp"
+                            alt="" width="64" height="64">
+                        <div class="s2-note__content"><strong>First, read one item</strong>
+                            <p>We will begin with something familiar: fetching a record by its key. <br>Then we will
+                                discover what EF Core remembers about the returned object and how that helps us save
+                                changes.</p>
+                        </div>
+                    </aside>
+                    <div class="card s2-card">
+                        <h2>Quick check</h2><label for="recap-choice">Does constructing a new InventoryDbContext fetch
+                            the Items table?</label><select id="recap-choice">
+                            <option value="">Choose an answer…</option>
+                            <option value="yes">Yes, the context loads the table.</option>
+                            <option value="no">No, an executed query fetches rows.</option>
+                        </select><button class="button s2-btn primary" id="recap-check" type="button">Check my
+                            choice</button>
+                        <p id="recap-feedback" class="s05-feedback" role="status"></p>
+                    </div><label class="check"><input type="checkbox" id="step-check-0" data-save="step-check-0"><span>I
+                            can distinguish a DbSet, a context and the database.</span></label>
+                    <footer class="step-footer"><button class="button secondary s2-btn" data-prev disabled>←
+                            Previous</button>
+                        <div class="step-actions"><button class="button s2-btn primary" data-complete="0"
+                                aria-pressed="false">✓ Mark step complete</button><button
+                                class="button secondary s2-btn" data-next>Next →</button></div>
+                    </footer>
+                </section>
+                <section class="lesson" id="s6-panel-1" aria-labelledby="s6-title-1" hidden>
+                    <div class="panel-head"><span class="section-kicker">STEP 02 / 08 · 10 MINUTES</span>
+                        <h1 id="s6-title-1" tabindex="-1">Prepare the practice database</h1>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Get your materials</h2>
+                        <p>Use Visual Studio (.NET 10 SDK), SQL Server and SSMS. Extract the starter before opening its
+                            solution.</p>
+                        <div class="button-row"><a class="button s2-btn primary"
+                                href="downloads/EF10_Session06_Student_Starter.zip" download>↓ Student starter ZIP</a><a
+                                class="button s2-btn secondary" href="downloads/setup-inventory.sql" download>↓ SQL
+                                setup</a><a class="button s2-btn secondary" href="downloads/START-HERE.md"
+                                download>Setup guide</a></div>
+                        <div class="table-wrap s2-table-wrap" tabindex="0" role="region" aria-label="Three projects">
+                            <table class="s2-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Project</th>
+                                        <th scope="col">Role</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>EF10_InventoryManager</code></td>
+                                        <td>Console application; menu, input, CRUD tasks</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>EF10_InventoryDBLibrary</code></td>
+                                        <td>InventoryDbContext and SQL Server provider</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>EF10_InventoryModels</code></td>
+                                        <td>Item entity and its mappings</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>1. Prepare a separate database</h2>
+                        <p>Connect in SSMS. Open and execute <code>setup-inventory.sql</code>. It creates
+                            <code>DBM_Session06_Inventory</code> and the missing <code>dbo.Items</code> table. It
+                            inserts the 16 familiar rows only on first setup.
+                        </p>
+                        <p>Run the <a href="downloads/verify-inventory.sql" download>verification script</a>. Check the
+                            database name and that IdIsIdentity is 1. Existing Session 06 data is kept on later runs.
+                        </p>
+                        <div class="table-wrap s2-table-wrap" tabindex="0" role="region" aria-label="Session 06 schema">
+                            <table class="s2-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Column</th>
+                                        <th scope="col">SQL type</th>
+                                        <th scope="col">C# property</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Id</td>
+                                        <td>int IDENTITY(1,1), PK</td>
+                                        <td>int</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>nvarchar(100)</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>UnitPrice</td>
+                                        <td>decimal(10,2)</td>
+                                        <td>decimal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stock</td>
+                                        <td>int</td>
+                                        <td>int</td>
+                                    </tr>
+                                    <tr>
+                                        <td>IsActive</td>
+                                        <td>bit</td>
+                                        <td>bool</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AddedAt</td>
+                                        <td>datetime2</td>
+                                        <td>DateTime</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <aside class="teacher-note s2-note"><img class="s2-note__mascot"
+                                src="images/db-mascot-teacher.webp" alt="" width="64" height="64">
+                            <div class="s2-note__content"><strong>What changed since Session 05?</strong>
+                                <p>Previously, Id was an ordinary primary key. Now SQL Server generates it. The model
+                                    maps Id with DatabaseGeneratedOption.Identity. Do not assign a new Id manually. SQL
+                                    Server may skip numbers.</p>
+                            </div>
+                        </aside>
+                        <div class="code-shell">
+                            <div class="code-head"><span>Item.cs · supplied key mapping</span><button
+                                    class="copy copy-btn" type="button">Copy code</button></div>
+                            <pre tabindex="0"><code>[Key]
+[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+public int Id { get; set; }</code></pre>
+                        </div>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>2. Connect your Console project</h2>
+                        <ol>
+                            <li>Open <code>EF10InventoryManager.sln</code>.</li>
+                            <li>Set <code>EF10_InventoryManager</code> as the startup project.</li>
+                            <li>Open <code>EF10_InventoryManager/appsettings.json</code>.</li>
+                            <li>Replace YOUR_SERVER with the instance name from SSMS. Keep the Session 06 database name.
+                            </li>
+                        </ol>
+                        <div class="code-shell">
+                            <div class="code-head"><span>JSON example · local SQL Server instance</span><button
+                                    class="copy copy-btn" type="button">Copy code</button></div>
+                            <pre tabindex="0"><code>{
+  &quot;ConnectionStrings&quot;: {
+    &quot;InventoryDbConnection&quot;: &quot;Server=.\\SQLEXPRESS;Database=DBM_Session06_Inventory;Integrated Security=True;Encrypt=True;TrustServerCertificate=True;Connect Timeout=10;&quot;
+  }
+}</code></pre>
+                        </div>
+                        <p>Use your actual instance. JSON uses two backslashes for one backslash. The classroom
+                            certificate setting is for local practice.</p>
+                        <div class="code-shell">
+                            <div class="code-head"><span>Program.cs · supplied provider and options</span><button
+                                    class="copy copy-btn" type="button">Copy code</button></div>
+                            <pre tabindex="0"><code>options = new DbContextOptionsBuilder&lt;InventoryDbContext&gt;()
+    .UseSqlServer(connection)
+    .Options;
+
+using var db = new InventoryDbContext(options);</code></pre>
+                        </div>
+                        <p><strong>Provider:</strong> <code>Microsoft.EntityFrameworkCore.SqlServer</code>.
+                            <code>UseSqlServer(connection)</code> selects and configures that provider. It uses the SQL
+                            Server driver to communicate with the database. Context construction does not open a
+                            connection.
+                        </p>
+                        <details class="s2-details">
+                            <summary>Package versions from the working Session 05 project</summary>
+                            <div class="reveal">
+                                <div class="table-wrap s2-table-wrap" tabindex="0" role="region"
+                                    aria-label="Pinned package versions">
+                                    <table class="s2-table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Package</th>
+                                                <th scope="col">Version</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Microsoft.EntityFrameworkCore.SqlServer</td>
+                                                <td>10.0.14</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Microsoft.Extensions.Configuration.Json</td>
+                                                <td>10.0.14</td>
+                                            </tr>
+                                            <tr>
+                                                <td>System.Security.Cryptography.Pkcs</td>
+                                                <td>10.0.13</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>3. Run the prepared starter</h2>
+                        <p>Restore and build, then run without debugging (Ctrl+F5). Choose option 1 to list the seed
+                            inventory. TODO options will show a reminder until you complete their methods.</p>
+                        <div class="code-shell">
+                            <div class="code-head"><span>Expected first run · Console</span><button
+                                    class="copy copy-btn" type="button">Copy code</button></div>
+                            <pre tabindex="0"><code>1 List items | 2 Find item | 3 Create item | 4 Update price
+5 Delete item | 6 Tracking experiment | 7 Challenge: update stock
+8 Find and tracking scope | 0 Exit
+Choose: 1
+
+Current SQL Server inventory
+Id | Name | UnitPrice | Stock | IsActive
+1 | Top Gun | 18.00 | 5 | True
+2 | Star Wars | 20.00 | 0 | True
+...
+Rows: 16</code></pre>
+                        </div>
+                        <p class="small">If you ran the lab before, there may be more than 16 rows.</p>
+                        <details class="s2-details">
+                            <summary>Use the .NET CLI instead</summary>
+                            <div class="reveal">
+                                <div class="code-shell">
+                                    <div class="code-head"><span>From the extracted solution folder</span><button
+                                            class="copy copy-btn" type="button">Copy code</button></div>
+                                    <pre tabindex="0"><code>dotnet restore EF10InventoryManager.sln
+dotnet build EF10InventoryManager.sln
+dotnet run --project EF10_InventoryManager</code></pre>
+                                </div>
+                            </div>
+                        </details>
+                        <aside class="teacher-note s2-note"><img class="s2-note__mascot"
+                                src="images/db-mascot-teacher.webp" alt="" width="64" height="64">
+                            <div class="s2-note__content"><strong>One context per operation</strong>
+                                <p>The supplied menu opens a fresh DbContext for each choice. using disposes it when
+                                    that action finishes. It prevents old tracked objects from leaking into the next
+                                    operation. Disposal does not save.</p>
+                            </div>
+                        </aside>
+                    </div><label class="check"><input type="checkbox" id="step-check-1" data-save="step-check-1"><span>I
+                            verified the new database and ran option 1.</span></label>
+                    <footer class="step-footer"><button class="button secondary s2-btn" data-prev>← Previous</button>
+                        <div class="step-actions"><button class="button s2-btn primary" data-complete="1"
+                                aria-pressed="false">✓ Mark step complete</button><button
+                                class="button secondary s2-btn" data-next>Next →</button></div>
+                    </footer>
+                </section>
+                <section class="lesson" id="s6-panel-2" aria-labelledby="s6-title-2" hidden>
+                    <div class="panel-head"><span class="section-kicker">STEP 03 / 08 · 16 MINUTES</span>
+                        <h1 id="s6-title-2" tabindex="-1">Read an item: tracking choices</h1>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Start with the purpose of the read</h2>
+                        <p>In Session 05, we used LINQ to display inventory data. Today, we also need to retrieve an
+                            item before changing its price or deleting it. Both start with a read, but they have
+                            different purposes.</p>
+                        <div class="code-shell">
+                            <div class="code-head"><span>Familiar SQL · same row for all three purposes</span><button
+                                    class="copy copy-btn" type="button">Copy code</button></div>
+                            <pre tabindex="0"><code>SELECT * FROM dbo.Items
+WHERE Id = @id;</code></pre>
+                        </div>
+                        <div class="s06-flow" aria-label="Three reasons to read an item">
+                            <div class="s06-flow-node"><span>1</span><strong>Read to display</strong>
+                                <p>Show an item or a report. No changes to save.</p>
+                            </div>
+                            <div class="s06-flow-node"><span>2</span><strong>Read to update</strong>
+                                <p>Load an item, change its price, then save.</p>
+                            </div>
+                            <div class="s06-flow-node"><span>3</span><strong>Read to delete</strong>
+                                <p>Load the item, check it, confirm removal, then save.</p>
+                            </div>
+                        </div>
+                        <p><strong>Choose the query based on what you will do with the result, not only on the
+                                ID.</strong></p>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Tracking or no tracking?</h2>
+                        <p>When EF Core reads a row, it can create a C# Item from its values. This is
+                            <strong>materialisation</strong>. For a normal entity query, EF Core also remembers that
+                            object in the DbContext and tracks its values. This is <strong>tracking</strong>.
+                        </p>
+                        <div class="s06-compare">
+                            <div class="code-shell">
+                                <div class="code-head"><span>Display only · no tracking</span><button
+                                        class="copy copy-btn" type="button">Copy code</button></div>
+                                <pre tabindex="0"><code>var item = await db.Items
+    .AsNoTracking()
+    .SingleOrDefaultAsync(i =&gt; i.Id == id);</code></pre>
+                            </div>
+                            <div class="code-shell">
+                                <div class="code-head"><span>Prepare to update or delete · tracked</span><button
+                                        class="copy copy-btn" type="button">Copy code</button></div>
+                                <pre tabindex="0"><code>var item = await db.Items
+    .SingleOrDefaultAsync(i =&gt; i.Id == id);</code></pre>
+                            </div>
+                        </div>
+
+                        <p class="small">Use <code>SingleOrDefaultAsync</code> when you expect at most one match, such
+                            as a primary key.<br> Use <code>FirstOrDefaultAsync</code> when several records may match
+                            and
+                            you only want one (add sorting if the choice matters).<br>A projection that returns only
+                            values, not entities, does not need tracking.</p>
+                        <aside class="teacher-note s2-note"><img class="s2-note__mascot"
+                                src="images/db-mascot-teacher.webp" alt="" width="64" height="64">
+                            <div class="s2-note__content"><strong>Check for null</strong>
+                                <p>Both single-result queries can return null when no item matches. Check the result
+                                    before accessing its properties.</p>
+                            </div>
+                        </aside>
+                        <div class="table-wrap s2-table-wrap" tabindex="0" role="region"
+                            aria-label="Same query purpose, different tracking">
+                            <table class="s2-table">
+                                <colgroup>
+                                    <col style="width: 50%;">
+                                    <col style="width: 50%;">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Read-only result</th>
+                                        <th scope="col">Tracked result</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>C# Item in memory, or null.</td>
+                                        <td>C# Item in memory, or null.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Not registered in this <code>DbContext</code>'s
+                                            <code>ChangeTracker</code>.
+                                        </td>
+                                        <td>A newly loaded entity is tracked by this
+                                            <code>DbContext</code>, initially as
+                                            <code>Unchanged</code>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td>
+                                            You can modify the object, but changes are not tracked
+                                            or saved automatically. Use <code>Update()</code> followed
+                                            by <code>SaveChangesAsync()</code> to persist them.
+                                        </td>
+
+                                        <td>EF Core can detect property changes and persist
+                                            them with <code>SaveChangesAsync()</code>.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p>Both queries can retrieve the same row when executed. <code>AsNoTracking()</code> avoids
+                            unnecessary tracking for display. Normal LINQ entity queries track by default;
+                            <code>AsTracking()</code> can make that choice explicit.
+                        </p>
+
+
+
+
+                        <div class="table-wrap s2-table-wrap" tabindex="0" role="region"
+                            aria-label="Choose the query for the job">
+                            <table class="s2-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Your aim</th>
+                                        <th scope="col">Tracking choice</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Show one item by ID</td>
+                                        <td><code>AsNoTracking()</code> — no changes needed</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Load one item to change or remove</td>
+                                        <td>Tracking (default) — prepare for changes</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Search or filter items for display</td>
+                                        <td><code>AsNoTracking()</code> — read-only results</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Show a list or report</td>
+                                        <td><code>AsNoTracking()</code> — avoid unnecessary tracking</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card s2-card">
+                        <h2>Who owns the tracking?</h2>
+
+                        <p>
+                            Tracking belongs to a specific
+                            <code>DbContext</code> instance.
+                            Each context has its own
+                            <code>ChangeTracker</code>.
+                        </p>
+
+                        <p>
+                            An entity can remain as a C# object in memory,
+                            but that does not mean it is still being tracked.
+                            When the context is disposed, its tracking
+                            information is no longer available.
+                        </p>
+
+                        <p>
+                            In our Console app, each menu action creates a
+                            fresh context. That context retrieves entities,
+                            performs the operation, and is then disposed.
+                        </p>
+
+                        <p>
+                            Web applications follow a similar idea,
+                            but usually create a separate
+                            <code>DbContext</code> for each HTTP request.
+                            Let's see why this matters.
+                        </p>
+                    </div>
+
+
+                    <div class="card s2-card">
+                        <h2>Why this matters in a web application</h2>
+
+
+                        <p>
+                            Imagine an inventory website. A user opens an item's
+                            edit page but may spend several minutes reviewing or
+                            changing its price before clicking Save.
+                            We should not keep the original <code>DbContext</code>
+                            alive while the user is editing. Instead, the save
+                            request typically uses a new context.
+                        </p>
+
+
+                        <div class="s06-flow" aria-label="Web request flow">
+                            <div class="s06-flow-node">
+                                <span>1</span>
+                                <strong>GET · display</strong>
+                                <p>
+                                    Context A reads the item data for display.
+                                    The request ends, and the context
+                                    is disposed.
+                                </p>
+                            </div>
+
+                            <div class="s06-flow-node">
+                                <span>2</span>
+                                <strong>User edits</strong>
+                                <p>
+                                    The browser holds the new price.
+                                    Context A is gone, so its tracking
+                                    is no longer available.
+                                </p>
+                            </div>
+
+                            <div class="s06-flow-node">
+                                <span>3</span>
+                                <strong>POST · save</strong>
+                                <p>
+                                    A new request uses Context B.
+                                    It retrieves the item with tracking,
+                                    validates the input, applies the
+                                    allowed change, and saves.
+                                </p>
+                            </div>
+                        </div>
+
+                        <p>
+                            <strong>Two requests, two contexts.</strong>
+                            Each <code>DbContext</code> has its own
+                            tracking information. Tracking is not
+                            shared between contexts.
+                        </p>
+
+                        <p class="small">
+                            We will learn how to implement HTTP requests
+                            in a later course.
+                        </p>
+
+
+                    </div>
+
+                    <div class="card s2-card">
+                        <h2>A direct primary-key lookup: FindAsync</h2>
+                        <div class="s06-compare">
+                            <div class="code-shell">
+                                <div class="code-head"><span>Familiar SQL · illustrative</span><button
+                                        class="copy copy-btn" type="button">Copy code</button></div>
+                                <pre tabindex="0"><code>SELECT * FROM dbo.Items
+WHERE Id = @id;</code></pre>
+                            </div>
+                            <div class="code-shell">
+                                <div class="code-head"><span>EF Core · C#</span><button class="copy copy-btn"
+                                        type="button">Copy code</button></div>
+                                <pre tabindex="0"><code>var item = await db.Items.FindAsync(id);</code></pre>
+                            </div>
+                        </div>
+                        <p class="small">When you need a tracked entity and know its primary key, FindAsync is a
+                            convenient alternative to the tracked LINQ query. If the key is already tracked in this
+                            context, it returns that object without another query. Otherwise it queries SQL Server; a
+                            missing key returns null.</p>
+                        <p>Use LINQ instead for no-tracking reads, extra conditions, projection or related-data queries.
+                            FindAsync itself is a primary-key operation, not a composable LINQ query.</p>
+
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Where does FindAsync look first?</h2>
+                        <p><code>FindAsync(id)</code> looks for an entity by its primary key. It checks the tracked
+                            entities in <strong>this context</strong> before sending a query to SQL Server.</p>
+                        <div class="s06-flow">
+                            <div class="s06-flow-node"><span>1</span><strong>FindAsync(1)</strong>
+                                <p>Search the context for an Item with key 1.</p>
+                            </div>
+                            <div class="s06-flow-node"><span>2</span><strong>Already tracked?</strong>
+                                <p><b>Yes:</b> return the same object, with no new SQL query. <b>No:</b> query SQL
+                                    Server.</p>
+                            </div>
+                            <div class="s06-flow-node"><span>3</span><strong>If a row is found</strong>
+                                <p>Materialise and track it as Unchanged. If no matching row exists, return null.</p>
+                            </div>
+                        </div>
+                        <div class="code-shell">
+                            <div class="code-head"><span>Same context · two references</span><button
+                                    class="copy copy-btn" type="button">Copy code</button></div>
+                            <pre tabindex="0"><code>var first = await db.Items.FindAsync(1);
+var again = await db.Items.FindAsync(1);
+
+if (first is not null)
+    Console.WriteLine(ReferenceEquals(first, again)); // True</code></pre>
+                        </div>
+                        <p><code>ReferenceEquals</code> checks whether two variables refer to the same C# object. It is
+                            not comparing two database rows.</p>
+                        <details class="s2-details">
+                            <summary>Does FindAsync always read the current database values?</summary>
+                            <div class="reveal">
+                                <p>No. If the same key is already tracked, it can return the current in-memory values,
+                                    even if they are unsaved. For an independent read of the stored row here, use
+                                    AsNoTracking with a LINQ condition. A new DbContext has its own tracker. A normal
+                                    tracking LINQ query can execute SQL but still reuse a tracked object.</p>
+                            </div>
+                        </details>
+
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Which rows are actually tracked?</h2>
+                        <p>Our database has many Items. Creating a context does <strong>not</strong> load them all. A
+                            DbSet gives access to the table through EF Core; it is not a list of every row in memory.
+                        </p>
+                        <div class="s06-scope-lab" aria-label="Tracking scope simulation">
+                            <span class="s05-status">SIMULATED DATABASE · 4 of the familiar rows</span>
+                            <div class="s06-scope-stats" aria-live="polite">
+                                <div><b id="scope-stored">4</b><span>Stored rows</span></div>
+                                <div><b id="scope-memory">0</b><span>Objects in memory</span></div>
+                                <div><b id="scope-tracked">0</b><span>Tracked entries</span></div>
+                            </div>
+                            <div class="table-wrap s2-table-wrap" tabindex="0" role="region"
+                                aria-label="Sample rows and tracking status">
+                                <table class="s2-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Stored in SQL Server</th>
+                                            <th scope="col">C# object in memory</th>
+                                            <th scope="col">Change Tracker entry</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><b>1 · Top Gun</b><br><span class="small">18.00</span></td>
+                                            <td><span id="scope-m1">Not loaded</span></td>
+                                            <td><span id="scope-t1">None</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>2 · Star Wars</b><br><span class="small">20.00</span></td>
+                                            <td><span id="scope-m2">Not loaded</span></td>
+                                            <td><span id="scope-t2">None</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>3 · Star Trek</b><br><span class="small">12.50</span></td>
+                                            <td><span id="scope-m3">Not loaded</span></td>
+                                            <td><span id="scope-t3">None</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>4 · The Godfather</b><br><span class="small">25.00</span></td>
+                                            <td>Not loaded</td>
+                                            <td>None</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="s06-scope-controls"><button type="button" class="button s2-btn secondary"
+                                    data-scope="find1">Find Top Gun (1)</button><button type="button"
+                                    class="button s2-btn secondary" data-scope="read2">Read Star Wars (no
+                                    tracking)</button><button type="button" class="button s2-btn secondary"
+                                    data-scope="find3">Find Star Trek (3)</button><button type="button"
+                                    class="button s2-btn secondary" data-scope="reset">Reset example</button></div>
+                            <div class="s06-sim-feedback" role="status"><strong id="scope-feedback">A new context has no
+                                    tracked objects yet.</strong></div>
+                            <div class="code-shell">
+                                <div class="code-head"><span>C# action · illustrative</span><button
+                                        class="copy copy-btn" type="button">Copy code</button></div>
+                                <pre
+                                    tabindex="0"><code id="scope-code">using var db = new InventoryDbContext(options);</code></pre>
+                            </div>
+                        </div>
+
+                        <p>
+                            After the three read operations, three C# objects
+                            exist in memory, but only two are tracked by this
+                            DbContext. The third object is not tracked.
+                            The Godfather was not retrieved at all; its row
+                            still exists in SQL Server.
+                        </p>
+                        <p>
+                            <strong>Tracked does not mean Modified.</strong>
+                            Top Gun and Star Trek initially have the
+                            <code>Unchanged</code> state because they were
+                            retrieved through tracking queries.
+                            However, tracking means EF Core monitors an entity;
+                            its state determines whether an INSERT,
+                            UPDATE, or DELETE is needed when saving changes.
+                            For example, <code>Add()</code> starts tracking
+                            a new entity as <code>Added</code>, marking it
+                            for insertion when <code>SaveChangesAsync()</code>
+                            is called.
+                        </p>
+
+                        <p>
+                            <strong>Choose tracking based on your goal.</strong>
+                            Entity queries track by default unless configured
+                            otherwise. Use <code>AsTracking()</code> to
+                            explicitly request tracking, or
+                            <code>AsNoTracking()</code> when tracking is
+                            unnecessary, such as displaying reports.
+                            Tracking is generally preferred when retrieving,
+                            editing, and saving an entity with the same
+                            DbContext.
+                        </p>
+
+                        <details class="s2-details">
+                            <summary>Can we change the default tracking behavior?</summary>
+                            <div class="reveal">
+                                <p>
+                                    Yes. EF Core tracks entity queries by default
+                                    (<code>TrackAll</code>). We can change this
+                                    default through <code>DbContextOptionsBuilder</code>.
+                                </p>
+
+                                <div class="code-shell">
+                                    <div class="code-head">
+                                        <span>DbContext configuration · optional</span>
+                                        <button class="copy copy-btn" type="button">Copy code</button>
+                                    </div>
+                                    <pre tabindex="0"><code>optionsBuilder
+    .UseSqlServer(connectionString)
+    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);</code></pre>
+                                </div>
+
+                                <p>
+                                    Now, entity queries use no tracking by default.
+                                    Individual queries can still override this setting:
+                                </p>
+
+                                <div class="code-shell">
+                                    <div class="code-head">
+                                        <span>Override for one query</span>
+                                        <button class="copy copy-btn" type="button">Copy code</button>
+                                    </div>
+                                    <pre tabindex="0"><code>var item = await db.Items
+    .AsTracking()
+    .SingleOrDefaultAsync(i => i.Id == id);</code></pre>
+                                </div>
+
+                                <p class="small">
+                                    <strong>Remember:</strong> This configuration
+                                    changes the default for LINQ entity queries,
+                                    not every EF Core operation.
+                                    For example, <code>FindAsync()</code> still
+                                    returns a tracked entity.
+                                </p>
+                            </div>
+                        </details>
+
+
+
+                        <aside class="teacher-note s2-note"><img class="s2-note__mascot"
+                                src="images/db-mascot-teacher.webp" alt="" width="64" height="64">
+                            <div class="s2-note__content"><strong>Try this prediction</strong>
+                                <p>If you edit a tracked Top Gun object, EF Core can detect and save the change. If you
+                                    edit the untracked Star Wars object, SaveChanges does not automatically write that
+                                    edit. The unloaded row has no C# object to edit in this example.</p>
+                            </div>
+                        </aside>
+                    </div>
+                    <article class="s05-task"><span class="s05-status">LAB TASK 01 · MENU OPTION 2</span>
+                        <h2>Find one item</h2>
+
+                        <p><strong>Requirement:</strong> Fetch a tracked Item by its primary key, show its data and
+                            handle a missing result. This is a learning exercise to prepare for the update and delete
+                            tasks.</p>
+                        <div class="s06-location"><strong>File</strong>
+                            <code>EF10_InventoryManager/CrudTasks.cs</code><br><strong>Method</strong>
+                            <code>ReadAsync(db, id)</code> · TODO 01
+                        </div>
+                        <ol>
+                            <li>Open the method and locate its START / END markers.</li>
+                            <li>Replace only the supplied placeholder statements.</li>
+                            <li>Use FindAsync with the provided id. If the result is null, print a message and return.
+                                Otherwise print the item and its state.</li>
+                        </ol>
+                        <details class="s2-details">
+                            <summary>Hint</summary>
+                            <div class="reveal">
+                                <p>Use <code>await db.Items.FindAsync(id)</code>. The return type may be null.
+                                    <code>new List&lt;Item&gt; { item }</code> passes one object to the supplied report
+                                    helper.
+                                </p>
+                            </div>
+                        </details>
+                        <details class="s2-details">
+                            <summary>Reveal the worked solution</summary>
+                            <div class="reveal">
+                                <div class="code-shell">
+                                    <div class="code-head"><span>Replace TODO 01 body</span><button
+                                            class="copy copy-btn" type="button">Copy code</button></div>
+                                    <pre tabindex="0"><code>var item = await db.Items.FindAsync(id);
+if (item is null)
+{
+    Console.WriteLine(&quot;Item not found.&quot;);
+    return;
+}
+ConsoleReport.PrintItems(&quot;Found item&quot;, new List&lt;Item&gt; { item });
+Console.WriteLine($&quot;State: {db.Entry(item).State}&quot;);</code></pre>
+                                </div>
+                            </div>
+                        </details>
+                        <div class="s06-outcome">
+                            <h3>Expected behaviour</h3>
+                            <p>Option 2 with ID 1 shows Top Gun and Unchanged. A positive ID that is absent shows Item
+                                not found.</p>
+                            <h3>Verify your work</h3>
+                            <p>Run option 1, then option 2 with ID 1. Use <code>verify-inventory.sql</code> with @ItemId
+                                = 1. Test a missing ID after checking the list.</p>
+                            <h3>Try a small variation</h3>
+                            <p>Retrieve Star Trek (ID 3) and explain why no SaveChanges call is needed.</p>
+                        </div>
+                    </article>
+                    <article class="s05-task"><span class="s05-status">LAB TASK 01B · MENU OPTION 8</span>
+                        <h2>Prove how tracking starts</h2>
+                        <p><strong>Requirement:</strong> in a fresh Context, observe what happens when you retrieve two
+                            different Items, find the same Item twice, and read a third Item without tracking.</p>
+                        <div class="s06-location"><strong>File</strong>
+                            <code>EF10_InventoryManager/CrudTasks.cs</code><br><strong>Method</strong>
+                            <code>ReadTrackingScopeAsync(db)</code> · TODO 01B
+                        </div>
+                        <ol>
+                            <li>Print the initial tracked-entry count: <code>db.ChangeTracker.Entries().Count()</code>.
+                            </li>
+                            <li>Find Top Gun (ID 1), print the count and find the same ID again. Check that both
+                                references point to the same object.</li>
+                            <li>Read Star Wars (ID 2) with <code>AsNoTracking()</code>, then find Star Trek (ID 3);
+                                print the count after each operation.</li>
+                            <li>Run option 8. Compare the count and SQL messages at each checkpoint.</li>
+                        </ol>
+                        <details class="s2-details">
+                            <summary>Hint · count and compare</summary>
+                            <div class="reveal">
+                                <p><code>Entries()</code> lists tracked entries in this context, not rows in the
+                                    database. Use <code>ReferenceEquals(first, again)</code> to compare two references.
+                                    Check that the seed rows exist before drawing conclusions.</p>
+                            </div>
+                        </details>
+                        <details class="s2-details">
+                            <summary>Reveal the worked solution</summary>
+                            <div class="reveal">
+                                <div class="code-shell">
+                                    <div class="code-head"><span>Replace TODO 01B body</span><button
+                                            class="copy copy-btn" type="button">Copy code</button></div>
+                                    <pre tabindex="0"><code>Console.WriteLine($&quot;Before any query: {db.ChangeTracker.Entries().Count()}&quot;);
+Console.WriteLine(&quot;First Find: ID 1&quot;);
+var first = await db.Items.FindAsync(1);
+if (first is null)
+{
+    Console.WriteLine(&quot;Seed ID 1 not found. Check setup.&quot;);
+    return;
+}
+Console.WriteLine($&quot;Tracked: {db.ChangeTracker.Entries().Count()}&quot;);
+
+Console.WriteLine(&quot;Second Find: same ID 1&quot;);
+var again = await db.Items.FindAsync(1);
+Console.WriteLine($&quot;Same object? {ReferenceEquals(first, again)}&quot;);
+Console.WriteLine($&quot;Tracked: {db.ChangeTracker.Entries().Count()}&quot;);
+
+Console.WriteLine(&quot;Read ID 2 without tracking&quot;);
+var untracked = await db.Items.AsNoTracking()
+    .FirstOrDefaultAsync(i =&gt; i.Id == 2);
+Console.WriteLine($&quot;Read: {untracked?.Name ?? &quot;Not found&quot;}&quot;);
+Console.WriteLine($&quot;Tracked: {db.ChangeTracker.Entries().Count()}&quot;);
+
+Console.WriteLine(&quot;Find a different ID 3&quot;);
+var another = await db.Items.FindAsync(3);
+Console.WriteLine($&quot;Read: {another?.Name ?? &quot;Not found&quot;}&quot;);
+Console.WriteLine($&quot;Tracked: {db.ChangeTracker.Entries().Count()}&quot;);
+
+foreach (var entry in db.ChangeTracker.Entries&lt;Item&gt;())
+    Console.WriteLine($&quot;{entry.Entity.Name}: {entry.State}&quot;);</code></pre>
+                                </div>
+                            </div>
+                        </details>
+                        <div class="table-wrap s2-table-wrap" tabindex="0" role="region"
+                            aria-label="Predicted tracking checkpoints">
+                            <table class="s2-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Operation</th>
+                                        <th scope="col">Tracked count</th>
+                                        <th scope="col">SQL query?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Fresh context</td>
+                                        <td>0</td>
+                                        <td>No</td>
+                                    </tr>
+                                    <tr>
+                                        <td>First Find ID 1</td>
+                                        <td>1</td>
+                                        <td>Yes</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Repeat Find ID 1</td>
+                                        <td>1</td>
+                                        <td>No (same object)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>No-tracking read ID 2</td>
+                                        <td>1</td>
+                                        <td>Yes</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Find ID 3</td>
+                                        <td>2</td>
+                                        <td>Yes</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p><strong>How to verify:</strong> Option 8 enables a supplied SQL command log only for this
+                            demonstration. It shows executed commands, not just a preview. The second Find should show
+                            no additional SELECT, and <code>Same object?</code> should be True. All reads are
+                            non-destructive.</p>
+                        <p class="small">Expected counts assume the supplied seed data is present and this is a fresh
+                            context. The SQL log is extra evidence; ReferenceEquals alone cannot prove that no database
+                            command was sent.</p>
+                        <details class="s2-details">
+                            <summary>What if I query by ID with LINQ instead?</summary>
+                            <div class="reveal">
+                                <p>After the first Find, try
+                                    <code>await db.Items.SingleOrDefaultAsync(i =&gt; i.Id == 1)</code>, as in Gorman
+                                    Listing 6-4 (adapted to Item). A normal LINQ query can execute SQL and still return
+                                    the existing tracked object. Try it with option 8 logging. Find is special because
+                                    it looks in the context first and can skip the query. This repeated lookup is just
+                                    an experiment.
+                                </p>
+                            </div>
+                        </details>
+                    </article>
+                    <div class="card s2-card">
+                        <h2>Inside EF Core: who does what?</h2>
+                        <p>Think of EF Core as the bridge between your C# objects and SQL Server. A DbContext is the
+                            working area for one database task.</p>
+                        <div class="s06-arch" aria-label="EF Core component hierarchy">
+                            <div class="s06-arch-app"><strong>C# application</strong><span>Creates and uses one
+                                    InventoryDbContext instance.</span></div>
+                            <div class="s06-arch-connector" aria-hidden="true">↓</div>
+                            <div class="s06-arch-core">
+                                <div class="s06-arch-heading"><b>EF Core</b><small>Microsoft.EntityFrameworkCore</small>
+                                </div>
+                                <div class="s06-arch-context">
+                                    <div class="s06-arch-heading"><b>InventoryDbContext</b><small>One context instance ·
+                                            one unit of work</small></div>
+                                    <div class="s06-arch-branches">
+                                        <div class="s06-arch-node"><span class="s06-label">ENTITY
+                                                SET</span><strong>DbSet&lt;Item&gt;</strong><code>db.Items</code>
+                                            <p>Build queries and register entity operations.</p>
+                                        </div>
+                                        <div class="s06-arch-node tracker"><span class="s06-label">SHARED
+                                                TRACKER</span><strong>ChangeTracker</strong><code>db.ChangeTracker</code>
+                                            <p>Tracks entity instances and their states in this context.</p>
+                                        </div>
+                                        <div class="s06-arch-node"><span class="s06-label">SAVE
+                                                METHOD</span><strong>SaveChangesAsync()</strong><code>db.SaveChangesAsync()</code>
+                                            <p>Detects and saves all pending tracked changes.</p>
+                                        </div>
+                                    </div>
+                                    <div class="s06-arch-caption">All entity sets in this context share the same
+                                        tracker. Save is a method on the context, not on a DbSet.</div>
+                                </div>
+                                <div class="s06-arch-connector" aria-hidden="true">↓</div>
+                                <p class="s06-arch-route">Queries and save operations use the configured provider.</p>
+                                <div class="s06-arch-provider"><strong>SQL Server
+                                        provider</strong><code>Microsoft.EntityFrameworkCore.SqlServer</code><span>Translates
+                                        supported queries and database changes for SQL Server.</span></div>
+                            </div>
+                            <div class="s06-arch-connector" aria-hidden="true">↓</div>
+                            <div class="s06-arch-transport">
+                                <div class="s06-arch-app"><strong>Microsoft.Data.SqlClient</strong><span>Driver:
+                                        connects and sends commands.</span></div>
+                                <div class="s06-arch-connector" aria-hidden="true">↓</div>
+                                <div class="s06-arch-app database"><strong>SQL Server</strong><span>Stores the real rows
+                                        and executes SQL.</span></div>
+                            </div>
+                        </div>
+                        <p><strong>Who owns change tracking?</strong> EF Core provides it; each DbContext instance has
+                            its own ChangeTracker. It is not a SQL Server feature and is not part of the SQL Server
+                            provider. The provider is needed for database-specific queries and commands.</p>
+                        <details class="s2-details">
+                            <summary>See the two paths: read and save</summary>
+                            <div class="reveal">
+                                <div class="s06-mini-path"><b>Read</b><span>DbSet query</span><i
+                                        aria-hidden="true">→</i><span>Provider / driver</span><i
+                                        aria-hidden="true">→</i><span>SQL Server</span></div>
+                                <p>Returned row values become C# objects; normal entity queries then track those
+                                    objects.</p>
+                                <div class="s06-mini-path"><b>Save</b><span>DbContext</span><i
+                                        aria-hidden="true">→</i><span>Detect pending changes</span><i
+                                        aria-hidden="true">→</i><span>Provider / driver / SQL Server</span></div>
+                                <p>Change tracking helps decide what to write. It does not send SQL itself.</p>
+                            </div>
+                        </details>
+
+                    </div><label class="check"><input type="checkbox" id="step-check-2" data-save="step-check-2"><span>I
+                            can choose a tracked or no-tracking read, check an existing or missing ID, and explain which
+                            objects are tracked.</span></label>
+                    <footer class="step-footer"><button class="button secondary s2-btn" data-prev>← Previous</button>
+                        <div class="step-actions"><button class="button s2-btn primary" data-complete="2"
+                                aria-pressed="false">✓ Mark step complete</button><button
+                                class="button secondary s2-btn" data-next>Next →</button></div>
+                    </footer>
+                </section>
+                <section class="lesson" id="s6-panel-3" aria-labelledby="s6-title-3" hidden>
+                    <div class="panel-head"><span class="section-kicker">STEP 04 / 08 · 14 MINUTES</span>
+                        <h1 id="s6-title-3" tabindex="-1">Create and save an item</h1>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Create starts in memory</h2>
+                        <div class="s06-compare">
+                            <div class="code-shell">
+                                <div class="code-head"><span>Familiar SQL · illustrative</span><button
+                                        class="copy copy-btn" type="button">Copy code</button></div>
+                                <pre tabindex="0"><code>INSERT INTO dbo.Items
+    (Name, UnitPrice, Stock, IsActive, AddedAt)
+VALUES (@name, @price, @stock, @active, @addedAt);</code></pre>
+                            </div>
+                            <div class="code-shell">
+                                <div class="code-head"><span>EF Core · C#</span><button class="copy copy-btn"
+                                        type="button">Copy code</button></div>
+                                <pre tabindex="0"><code>var item = new Item { /* property values */ };
+db.Items.Add(item);
+await db.SaveChangesAsync();</code></pre>
+                            </div>
+                        </div>
+                        <p class="small">The SQL statement is illustrative. The database-generated identity value is
+                            returned to EF Core after a successful insert.</p>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Three moments in an insertion</h2>
+                        <div class="s06-flow" aria-label="Operation flow">
+                            <div class="s06-flow-node"><span>1</span><strong>New Item</strong>
+                                <p>C# object exists. No row yet. State: Detached.</p>
+                            </div>
+                            <div class="s06-flow-node"><span>2</span><strong>Add</strong>
+                                <p>EF Core starts tracking the new Item. State: Added. Still no row.</p>
+                            </div>
+                            <div class="s06-flow-node"><span>3</span><strong>Save</strong>
+                                <p>EF Core inserts the row; SQL Server provides its ID. State: Unchanged.</p>
+                            </div>
+                        </div>
+                        <p>The <code>new Item { ... }</code> syntax creates an object and fills its properties.
+                            <code>Add()</code> schedules an insertion. It is not the same as executing SQL INSERT.
+                        </p>
+                        <aside class="teacher-note s2-note"><img class="s2-note__mascot"
+                                src="images/db-mascot-teacher.webp" alt="" width="64" height="64">
+                            <div class="s2-note__content"><strong>Identity key</strong>
+                                <p>Leave Id at its default value. EF may track a temporary key internally; the real
+                                    generated Id is available on item.Id after a successful save. Never predict it.</p>
+                            </div>
+                        </aside>
+                    </div>
+                    <article class="s05-task"><span class="s05-status">LAB TASK 02 · MENU OPTION 3</span>
+                        <h2>Add Common Green Darner</h2>
+
+                        <p><strong>Requirement:</strong> Create one Item. Use the book’s Common Green Darner name, with
+                            classroom price 12.50 and stock 3.</p>
+                        <div class="s06-location"><strong>File</strong>
+                            <code>EF10_InventoryManager/CrudTasks.cs</code><br><strong>Method</strong>
+                            <code>CreateAsync(db, name, price, stock)</code> · TODO 02
+                        </div>
+                        <ol>
+                            <li>Open the method and locate its START / END markers.</li>
+                            <li>Replace only the supplied placeholder statements.</li>
+                            <li>Build an Item using the supplied parameters; fill IsActive and AddedAt. Register it with
+                                Add, save asynchronously, and print the generated ID.</li>
+                        </ol>
+                        <details class="s2-details">
+                            <summary>Hint</summary>
+                            <div class="reveal">
+                                <p>The Console input helpers already validate name, price and stock. Use
+                                    <code>DateTime.Now</code> for AddedAt, and <code>IsActive = true</code>.
+                                </p>
+                            </div>
+                        </details>
+                        <details class="s2-details">
+                            <summary>Reveal the worked solution</summary>
+                            <div class="reveal">
+                                <div class="code-shell">
+                                    <div class="code-head"><span>Replace TODO 02 body</span><button
+                                            class="copy copy-btn" type="button">Copy code</button></div>
+                                    <pre tabindex="0"><code>var item = new Item
+{
+    Name = name,
+    UnitPrice = price,
+    Stock = stock,
+    IsActive = true,
+    AddedAt = DateTime.Now
+};
+db.Items.Add(item);
+Console.WriteLine($&quot;Before save: {db.Entry(item).State}&quot;);
+int written = await db.SaveChangesAsync();
+Console.WriteLine($&quot;Saved entries: {written}; generated ID: {item.Id}&quot;);
+Console.WriteLine($&quot;After save: {db.Entry(item).State}&quot;);</code></pre>
+                                </div>
+                            </div>
+                        </details>
+                        <div class="s06-outcome">
+                            <h3>Expected behaviour</h3>
+                            <p>Before save: Added. After successful save: one entry written, actual generated ID shown,
+                                state Unchanged.</p>
+                            <h3>Verify your work</h3>
+                            <p>Choose option 3 and enter Common Green Darner, 12.50, 3. <strong>Record the ID
+                                    below.</strong> Use option 2 with that ID and verify in SSMS.</p>
+                            <h3>Try a small variation</h3>
+                            <p>Create Blade Runner 2049 with your own valid price/stock as a second practice record if
+                                you finish early. Keep its separate ID.</p>
+                        </div>
+                    </article>
+                    <div class="card s2-card">
+                        <h2>Keep your generated ID</h2><label for="created-id">My Common Green Darner database ID (saved
+                            locally in the browser)</label><input id="created-id" type="text" inputmode="numeric"
+                            placeholder="Enter the ID printed by your Console" data-save="created-id">
+                        <p class="small">Use your ID for Steps 05 and 06. The simulator ID is not your SQL Server ID.
+                        </p>
+                    </div><label class="check"><input type="checkbox" id="step-check-3" data-save="step-check-3"><span>I
+                            recorded my real generated ID and verified the new row.</span></label>
+                    <footer class="step-footer"><button class="button secondary s2-btn" data-prev>← Previous</button>
+                        <div class="step-actions"><button class="button s2-btn primary" data-complete="3"
+                                aria-pressed="false">✓ Mark step complete</button><button
+                                class="button secondary s2-btn" data-next>Next →</button></div>
+                    </footer>
+                </section>
+                <section class="lesson" id="s6-panel-4" aria-labelledby="s6-title-4" hidden>
+                    <div class="panel-head"><span class="section-kicker">STEP 05 / 08 · 16 MINUTES</span>
+                        <h1 id="s6-title-4" tabindex="-1">Update a tracked entity</h1>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>The powerful part: implicit update</h2>
+                        <div class="s06-compare">
+                            <div class="code-shell">
+                                <div class="code-head"><span>Familiar SQL · illustrative</span><button
+                                        class="copy copy-btn" type="button">Copy code</button></div>
+                                <pre tabindex="0"><code>UPDATE dbo.Items
+SET UnitPrice = @newPrice
+WHERE Id = @id;</code></pre>
+                            </div>
+                            <div class="code-shell">
+                                <div class="code-head"><span>EF Core · C#</span><button class="copy copy-btn"
+                                        type="button">Copy code</button></div>
+                                <pre tabindex="0"><code>var item = await db.Items.FindAsync(id);
+if (item is not null)
+{
+    item.UnitPrice = newPrice;
+    await db.SaveChangesAsync();
+}</code></pre>
+                            </div>
+                        </div>
+                        <p class="small">No call to Update(). The context already tracks the returned entity. Saving
+                            normally detects changes and produces the appropriate UPDATE.</p>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>How does EF Core know?</h2>
+                        <p>The Change Tracker keeps an original snapshot and uses the tracked object’s current values.
+                            Compare the three different places:</p>
+                        <div class="s06-three">
+                            <div class="s06-layer"><span class="s06-label">C# OBJECT</span>
+                                <h3>Current value</h3><b class="s06-value">25.00</b><small>item.UnitPrice</small>
+                            </div>
+                            <div class="s06-layer"><span class="s06-label">CHANGE TRACKER</span>
+                                <h3>Original value</h3><b class="s06-value">12.50</b><small>Detect changes →
+                                    Modified</small>
+                            </div>
+                            <div class="s06-layer"><span class="s06-label">SQL SERVER</span>
+                                <h3>Stored value</h3><b class="s06-value">12.50</b><small>Until saving succeeds</small>
+                            </div>
+                        </div>
+                        <div class="s06-flow" aria-label="Operation flow">
+                            <div class="s06-flow-node"><span>1</span><strong>Retrieve</strong>
+                                <p>EF tracks the existing Item as Unchanged.</p>
+                            </div>
+                            <div class="s06-flow-node"><span>2</span><strong>Edit</strong>
+                                <p>Change its price in memory. Database unchanged.</p>
+                            </div>
+                            <div class="s06-flow-node"><span>3</span><strong>Save</strong>
+                                <p>DetectChanges compares values. SQL Server is updated.</p>
+                            </div>
+                        </div>
+                        <p>With normal snapshot tracking, the reported state may remain Unchanged until detection. Some
+                            inspection APIs trigger detection. SaveChangesAsync normally does it automatically.</p>
+                        <aside class="teacher-note s2-note"><img class="s2-note__mascot"
+                                src="images/db-mascot-teacher.webp" alt="" width="64" height="64">
+                            <div class="s2-note__content"><strong>Do not call Update() here</strong>
+                                <p>Update() is an explicit way to mark an entity for updating and can mark more
+                                    properties modified. It is unnecessary for an Item we just retrieved with tracking.
+                                    Avoid creating an incomplete new object just to overwrite an existing row.</p>
+                            </div>
+                        </aside>
+                    </div>
+                    <article class="s05-task"><span class="s05-status">LAB TASK 03 · MENU OPTION 4</span>
+                        <h2>Change your item and observe the save boundary</h2>
+
+                        <p><strong>Requirement:</strong> Change the price of your created Common Green Darner to 25.00
+                            without Update(). Compare the memory price, state and actual stored price before and after
+                            the save.</p>
+                        <div class="s06-location"><strong>File</strong>
+                            <code>EF10_InventoryManager/CrudTasks.cs</code><br><strong>Method</strong>
+                            <code>UpdatePriceAsync(db, id, newPrice)</code> · TODO 03
+                        </div>
+                        <ol>
+                            <li>Open the method and locate its START / END markers.</li>
+                            <li>Replace only the supplied placeholder statements.</li>
+                            <li>Retrieve by id, check for null, and assign the price. Inspect the state using Entry;
+                                read a separate no-tracking copy to see the stored value before saving. Save, then query
+                                the stored value again.</li>
+                        </ol>
+                        <details class="s2-details">
+                            <summary>Hint</summary>
+                            <div class="reveal">
+                                <p>Keep the same context from retrieval to saving. The no-tracking query uses a
+                                    different object and does not replace the tracked one. Entry inspection may detect
+                                    changes. Use <code>await db.SaveChangesAsync();</code> once.</p>
+                            </div>
+                        </details>
+                        <details class="s2-details">
+                            <summary>Reveal the worked solution</summary>
+                            <div class="reveal">
+                                <div class="code-shell">
+                                    <div class="code-head"><span>Replace TODO 03 body</span><button
+                                            class="copy copy-btn" type="button">Copy code</button></div>
+                                    <pre
+                                        tabindex="0"><code>var item = await db.Items.FindAsync(id);
+if (item is null)
+{
+    Console.WriteLine(&quot;Item not found.&quot;);
+    return;
+}
+Console.WriteLine($&quot;Old price: {item.UnitPrice:F2}&quot;);
+item.UnitPrice = newPrice;
+// Entry() can detect changes; report the state after that inspection.
+var entry = db.Entry(item);
+Console.WriteLine($&quot;Original tracked price: {entry.Property(i =&gt; i.UnitPrice).OriginalValue:F2}&quot;);
+Console.WriteLine($&quot;Memory price: {item.UnitPrice:F2}; state: {entry.State}&quot;);
+var before = await db.Items.AsNoTracking()
+    .SingleOrDefaultAsync(i =&gt; i.Id == id);
+if (before is null)
+{
+    Console.WriteLine(&quot;Stored row not found. Nothing saved.&quot;);
+    return;
+}
+Console.WriteLine($&quot;Stored price before save: {before.UnitPrice:F2}&quot;);
+// No Update() call: this entity is already tracked.
+int written = await db.SaveChangesAsync();
+Console.WriteLine($&quot;New price: {item.UnitPrice:F2}; entries written: {written}&quot;);
+Console.WriteLine($&quot;After save: {entry.State}; original snapshot: {entry.Property(i =&gt; i.UnitPrice).OriginalValue:F2}&quot;);
+var after = await db.Items.AsNoTracking()
+    .SingleOrDefaultAsync(i =&gt; i.Id == id);
+Console.WriteLine($&quot;Stored price after save: {after?.UnitPrice.ToString(&quot;F2&quot;) ?? &quot;Not found&quot;}&quot;);</code></pre>
+                                </div>
+                            </div>
+                        </details>
+                        <div class="s06-outcome">
+                            <h3>Expected behaviour</h3>
+                            <p>Memory changes to 25.00; state Modified after inspection. Before save, stored price stays
+                                12.50. After successful save, stored price is 25.00 and tracked state Unchanged. If the
+                                price was already 25.00, zero writes can be correct.</p>
+                            <h3>Verify your work</h3>
+                            <p>Run option 4 with your actual created ID. Capture both stored-price checkpoints; retrieve
+                                again with option 2 or verify in SSMS using the same ID.</p>
+                            <h3>Try a small variation</h3>
+                            <p>Repeat with the same price and explain why zero entries can be written.</p>
+                        </div>
+                    </article>
+                    <aside class="teacher-note s2-note"><img class="s2-note__mascot" src="images/db-mascot-teacher.webp"
+                            alt="" width="64" height="64">
+                        <div class="s2-note__content"><strong>How long is a context alive?</strong>
+                            <p>Tracking belongs to the current context, not the Item class or SQL Server. If it is
+                                disposed without saving, the pending update is not stored. A C# object can still exist
+                                if your code keeps a reference to it.</p>
+                        </div>
+                    </aside><label class="check"><input type="checkbox" id="step-check-4"
+                            data-save="step-check-4"><span>I compared the object in memory with the stored price before
+                            and after saving.</span></label>
+                    <footer class="step-footer"><button class="button secondary s2-btn" data-prev>← Previous</button>
+                        <div class="step-actions"><button class="button s2-btn primary" data-complete="4"
+                                aria-pressed="false">✓ Mark step complete</button><button
+                                class="button secondary s2-btn" data-next>Next →</button></div>
+                    </footer>
+                </section>
+                <section class="lesson" id="s6-panel-5" aria-labelledby="s6-title-5" hidden>
+                    <div class="panel-head"><span class="section-kicker">STEP 06 / 08 · 12 MINUTES</span>
+                        <h1 id="s6-title-5" tabindex="-1">Confirm and delete</h1>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Delete means remove a stored row</h2>
+                        <div class="s06-compare">
+                            <div class="code-shell">
+                                <div class="code-head"><span>Familiar SQL · illustrative</span><button
+                                        class="copy copy-btn" type="button">Copy code</button></div>
+                                <pre tabindex="0"><code>DELETE FROM dbo.Items
+WHERE Id = @id;</code></pre>
+                            </div>
+                            <div class="code-shell">
+                                <div class="code-head"><span>EF Core · C#</span><button class="copy copy-btn"
+                                        type="button">Copy code</button></div>
+                                <pre tabindex="0"><code>var item = await db.Items.FindAsync(id);
+if (item is not null)
+{
+    // Ask for confirmation first.
+    db.Items.Remove(item);
+    await db.SaveChangesAsync();
+}</code></pre>
+                            </div>
+                        </div>
+                        <p class="small">Remove marks an existing entity as Deleted. SQL DELETE is normally executed at
+                            the save boundary.</p>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Do it safely</h2>
+                        <div class="s06-flow" aria-label="Operation flow">
+                            <div class="s06-flow-node"><span>1</span><strong>Find</strong>
+                                <p>Know which exact row will be deleted.</p>
+                            </div>
+                            <div class="s06-flow-node"><span>2</span><strong>Confirm</strong>
+                                <p>Show the name and key. Continue only after YES.</p>
+                            </div>
+                            <div class="s06-flow-node"><span>3</span><strong>Remove & save</strong>
+                                <p>Deleted → successful save → Detached.</p>
+                            </div>
+                        </div>
+                        <p>Do not delete the seed records. The supplied menu rejects IDs 1–16 for all update/delete
+                            options. Deleting a freshly created practice item lets you verify the whole lifecycle.</p>
+                        <aside class="teacher-note s2-note"><img class="s2-note__mascot"
+                                src="images/db-mascot-teacher.webp" alt="" width="64" height="64">
+                            <div class="s2-note__content"><strong>Remove is not the same as DELETE right now</strong>
+                                <p>Before saving, the stored row still exists. After saving, the deleted entity normally
+                                    becomes Detached; a reference to the C# object may still exist. Removing a new Added
+                                    entity before saving cancels the pending insert.</p>
+                            </div>
+                        </aside>
+                    </div>
+                    <article class="s05-task"><span class="s05-status">LAB TASK 04 · MENU OPTION 5</span>
+                        <h2>Delete your created item by ID</h2>
+                        <p><strong>Requirement:</strong> Delete your own Common Green Darner record only after explicit
+                            confirmation.</p>
+                        <div class="s06-location"><strong>File</strong>
+                            <code>EF10_InventoryManager/CrudTasks.cs</code><br><strong>Method</strong>
+                            <code>DeleteAsync(db, id)</code> · TODO 04
+                        </div>
+                        <ol>
+                            <li>Open the method and locate its START / END markers.</li>
+                            <li>Replace only the supplied placeholder statements.</li>
+                            <li>Find, check for null, show the exact name and ID, read YES, call Remove, then save.</li>
+                        </ol>
+                        <details class="s2-details">
+                            <summary>Hint</summary>
+                            <div class="reveal">
+                                <p><code>Console.ReadLine()?.Trim()</code> safely handles missing input. Use an early
+                                    return when the user does not type YES.</p>
+                            </div>
+                        </details>
+                        <details class="s2-details">
+                            <summary>Reveal the worked solution</summary>
+                            <div class="reveal">
+                                <div class="code-shell">
+                                    <div class="code-head"><span>Replace TODO 04 body</span><button
+                                            class="copy copy-btn" type="button">Copy code</button></div>
+                                    <pre tabindex="0"><code>var item = await db.Items.FindAsync(id);
+if (item is null)
+{
+    Console.WriteLine(&quot;Item not found.&quot;);
+    return;
+}
+Console.Write($&quot;Delete {item.Name} (ID {item.Id})? Type YES: &quot;);
+if (Console.ReadLine()?.Trim() != &quot;YES&quot;)
+{
+    Console.WriteLine(&quot;Cancelled.&quot;);
+    return;
+}
+db.Items.Remove(item);
+Console.WriteLine($&quot;Before save: {db.Entry(item).State}&quot;);
+int written = await db.SaveChangesAsync();
+Console.WriteLine($&quot;Entries written: {written}; after save: {db.Entry(item).State}&quot;);</code></pre>
+                                </div>
+                            </div>
+                        </details>
+                        <div class="s06-outcome">
+                            <h3>Expected behaviour</h3>
+                            <p>Typing anything except YES cancels the operation. YES marks the existing Item Deleted and
+                                then saves. After success, the state is Detached.</p>
+                            <h3>Verify your work</h3>
+                            <p>First cancel option 5 with NO and verify your item still exists. Repeat with YES. Use
+                                option 2 and <code>verify-inventory.sql</code> to confirm Not found.</p>
+                            <h3>Try a small variation</h3>
+                            <p>Try the now missing ID again. It should print Item not found, not throw an error.</p>
+                        </div>
+                    </article><label class="check"><input type="checkbox" id="step-check-5"
+                            data-save="step-check-5"><span>I confirmed the deletion and verified the row is
+                            absent.</span></label>
+                    <footer class="step-footer"><button class="button secondary s2-btn" data-prev>← Previous</button>
+                        <div class="step-actions"><button class="button s2-btn primary" data-complete="5"
+                                aria-pressed="false">✓ Mark step complete</button><button
+                                class="button secondary s2-btn" data-next>Next →</button></div>
+                    </footer>
+                </section>
+                <section class="lesson" id="s6-panel-6" aria-labelledby="s6-title-6" hidden>
+                    <div class="panel-head"><span class="section-kicker">STEP 07 / 08 · 24 MINUTES</span>
+                        <h1 id="s6-title-6" tabindex="-1">Explore change tracking</h1>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Five entity states</h2>
+                        <p>Entity state is EF Core’s view of one object within one DbContext.</p>
+                        <div class="table-wrap s2-table-wrap" tabindex="0" role="region" aria-label="Entity states">
+                            <table class="s2-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">State</th>
+                                        <th scope="col">Meaning</th>
+                                        <th scope="col">Typical save</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="s06-state detached">Detached</span></td>
+                                        <td>Not tracked by this context.</td>
+                                        <td>No automatic write</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="s06-state added">Added</span></td>
+                                        <td>New entity scheduled for insertion.</td>
+                                        <td>INSERT</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="s06-state unchanged">Unchanged</span></td>
+                                        <td>Tracked, no detected differences.</td>
+                                        <td>None</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="s06-state modified">Modified</span></td>
+                                        <td>Tracked entity has detected changes.</td>
+                                        <td>UPDATE</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="s06-state deleted">Deleted</span></td>
+                                        <td>Existing tracked entity scheduled for deletion.</td>
+                                        <td>DELETE</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p><strong>Save boundary:</strong> After default successful saving, Added and Modified normally
+                            become Unchanged. Deleted becomes Detached. SaveChangesAsync returns the number of state
+                            entries written, not necessarily the exact number of SQL rows affected.</p>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Interactive tracking lab</h2>
+                        <p>Learn with a <strong>simulated database</strong>. One object is in focus at a time. The real
+                            Console app performs SQL Server operations; this demo does not.</p>
+                        <div class="s06-simulator" aria-label="Change tracking simulator">
+                            <div class="s06-sim-context"><span id="sim-context" class="s05-status"></span><label
+                                    for="sim-row">Choose a simulated stored row to retrieve</label><select
+                                    id="sim-row"></select></div>
+                            <div class="s06-three" aria-live="polite">
+                                <div class="s06-layer"><span class="s06-label">01 · APPLICATION MEMORY</span>
+                                    <h3>C# object</h3>
+                                    <div id="sim-memory"></div>
+                                </div>
+                                <div class="s06-layer"><span class="s06-label">02 · CHANGE TRACKER</span>
+                                    <h3>Tracking entry</h3>
+                                    <div id="sim-tracker"></div>
+                                </div>
+                                <div class="s06-layer"><span class="s06-label">03 · SIMULATED DATABASE</span>
+                                    <h3>Stored row</h3>
+                                    <div id="sim-db"></div>
+                                </div>
+                            </div>
+                            <div class="s06-sim-controls"><button class="button s2-btn secondary"
+                                    data-sim="retrieve">Retrieve</button><button class="button s2-btn secondary"
+                                    data-sim="noTrack">AsNoTracking</button><button class="button s2-btn secondary"
+                                    data-sim="create">New Item</button><button class="button s2-btn secondary"
+                                    data-sim="add">Add</button><label class="s06-edit" for="sim-price">New price <input
+                                        type="number" id="sim-price" min="0" max="99999999.99" step="0.01"
+                                        value="25.00"></label><button class="button s2-btn secondary"
+                                    data-sim="edit">Edit price</button><button class="button s2-btn secondary"
+                                    data-sim="detect">Detect changes</button><button class="button s2-btn secondary"
+                                    data-sim="remove">Remove</button><button class="button s2-btn primary"
+                                    data-sim="save">Save changes</button><button class="button s2-btn secondary"
+                                    data-sim="dispose">Dispose context</button><button class="button s2-btn secondary"
+                                    data-sim="newContext">New context</button><button class="button s2-btn secondary"
+                                    data-sim="reset">Reset simulation</button></div>
+                            <div class="s06-sim-feedback" role="status"><strong id="sim-feedback"></strong>
+                                <p id="sim-before" class="small"></p>
+                            </div>
+                            <div class="code-shell">
+                                <div class="code-head"><span>Illustrative SQL · not executed</span><button
+                                        class="copy copy-btn" type="button">Copy code</button></div>
+                                <pre tabindex="0"><code id="sim-sql">No database operation yet.</code></pre>
+                            </div>
+                        </div>
+                        <p class="small">The state display uses a simplified snapshot model and does not itself trigger
+                            change detection. In real EF Core, inspecting entries can trigger detection.</p>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Four mini-experiments</h2>
+                        <ol>
+                            <li>Reset → Retrieve Top Gun → Edit price → Detect changes → Save. Compare the three values
+                                before and after.</li>
+                            <li>Reset → New Item → Add → Save. Observe the generated simulated ID and Unchanged state.
+                                Remove → Save. The object becomes Detached and the row disappears.</li>
+                            <li>Reset → Retrieve → Edit → Dispose context → New context → Retrieve. Does the stored
+                                price change?</li>
+                            <li>Reset → AsNoTracking → Edit price → Save. Does it produce an UPDATE?</li>
+                        </ol>
+                        <details class="s2-details">
+                            <summary>Check your predictions</summary>
+                            <div class="reveal">
+                                <p>1. The object changes first; save persists the new value. 2. Add does not insert
+                                    until save. 3. Disposal does not save. 4. An untracked object’s edit alone writes
+                                    nothing.</p>
+                            </div>
+                        </details>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>See a real tracking experiment in the Console</h2>
+                        <p>Option 6 is supplied in <code>TrackingExperiment.cs</code>. It uses Top Gun only for a
+                            non-persisting experiment. No seed change is saved.</p>
+                        <div class="code-shell">
+                            <div class="code-head"><span>Controlled detection demonstration · simplified
+                                    excerpt</span><button class="copy copy-btn" type="button">Copy code</button></div>
+                            <pre tabindex="0"><code>var entry = db.Entry(item);
+db.ChangeTracker.AutoDetectChangesEnabled = false;
+item.UnitPrice = 25m;
+Console.WriteLine(entry.State); // before detection
+db.ChangeTracker.DetectChanges();
+Console.WriteLine(entry.State); // after detection</code></pre>
+                        </div>
+                        <p>The actual sample restores the original setting in <code>finally</code> and clears its
+                            tracked changes before demonstrating AsNoTracking. It reads the actual stored price again.
+                            Do not turn detection off in normal CRUD code.</p>
+                        <aside class="teacher-note s2-note"><img class="s2-note__mascot"
+                                src="images/db-mascot-teacher.webp" alt="" width="64" height="64">
+                            <div class="s2-note__content"><strong>Important inspection detail</strong>
+                                <p>Entry() and ChangeTracker.Entries() can detect changes. The experiment controls
+                                    detection so the before/after state is meaningful. In everyday code, let EF Core do
+                                    it automatically.</p>
+                            </div>
+                        </aside>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>One context, one unit of work</h2>
+                        <p>In EF Core, a <strong>Unit of Work</strong> is a group of related data changes coordinated by
+                            one DbContext. We can prepare several changes and save them together when the task is ready.
+                        </p>
+                        <div class="s06-uow-rules">
+                            <div><b>1 DbContext</b><span>One Change Tracker for this instance.</span></div>
+                            <div><b>1 Change Tracker</b><span>Every tracked entity in that context, from all its
+                                    DbSets.</span></div>
+                            <div><b>1 SaveChangesAsync()</b><span>All pending tracked changes in that context.</span>
+                            </div>
+                        </div>
+                        <h3>Imagine a larger context</h3>
+                        <div class="s06-uow-map" aria-label="Several DbSets share the context's Change Tracker">
+                            <div class="s06-uow-map-title"><strong>Same DbContext</strong><small>Future example: several
+                                    entity sets</small></div>
+                            <div class="s06-uow-sets">
+                                <div><code>db.Items</code><span>Tracked Item</span></div>
+                                <div><code>db.Categories</code><span>Tracked Category</span></div>
+                                <div><code>db.Genres</code><span>Tracked Genre</span></div>
+                            </div>
+                            <div class="s06-arch-connector" aria-hidden="true">↓</div>
+                            <div class="s06-uow-shared"><b>One shared ChangeTracker</b><span>All tracked entity
+                                    instances and states</span></div>
+                            <div class="s06-arch-connector" aria-hidden="true">↓</div>
+                            <div class="s06-uow-save"><b>SaveChangesAsync()</b><span>Saves pending changes, not every
+                                    object or database row</span></div>
+                        </div>
+                        <p class="small">Categories and Genres are a preview of future sessions, not new tables in this
+                            lab. Today we practise using Items only.</p>
+                        <h3>Try a unit of work with Items</h3>
+                        <p>Two existing practice Items have already been retrieved with tracking. An untouched seed row
+                            has not been loaded. Another Item was read without tracking. Now prepare three changes in
+                            the same context.</p>
+                        <div class="code-shell">
+                            <div class="code-head"><span>C# pattern · existing practice objects and a prepared new
+                                    Item</span><button class="copy copy-btn" type="button">Copy code</button></div>
+                            <pre tabindex="0"><code>// Both existing objects were retrieved using this same db.
+existingItem.UnitPrice = 25m;
+db.Items.Remove(itemToDelete);
+db.Items.Add(newItem);
+
+await db.SaveChangesAsync(); // Save the unit of work</code></pre>
+                        </div>
+                        <p class="small">This illustrates the pattern, not a standalone method. In the real app, find
+                            and validate your own practice IDs, confirm deletion, and prepare the new Item before
+                            saving.</p>
+                        <div class="s06-scope-lab" aria-label="Unit of work simulation"><span
+                                class="s05-status">SIMULATED DATABASE · ONE ACTIVE CONTEXT</span>
+                            <div class="s06-scope-stats">
+                                <div><b id="uow-count">2</b><span>Tracked entries</span></div>
+                                <div><b id="uow-pending">0</b><span>Pending changes</span></div>
+                                <div><b id="uow-writes">0</b><span>Entries saved</span></div>
+                            </div>
+                            <div class="table-wrap s2-table-wrap" tabindex="0" role="region"
+                                aria-label="Pending changes and persisted rows">
+                                <table class="s2-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Item / action</th>
+                                            <th scope="col">State in Change Tracker</th>
+                                            <th scope="col">Database value now</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><b>Common Green Darner</b><br><span id="uow-edit-memory">Memory price:
+                                                    12.50</span></td>
+                                            <td><span id="uow-edit-state">Unchanged</span></td>
+                                            <td><span id="uow-edit-stored">12.50</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Blade Runner 2049</b><br><span id="uow-delete-memory">Object
+                                                    loaded</span></td>
+                                            <td><span id="uow-delete-state">Unchanged</span></td>
+                                            <td><span id="uow-delete-stored">Row exists</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Star Trek (new practice copy)</b><br><span id="uow-add-memory">No new
+                                                    object yet</span></td>
+                                            <td><span id="uow-add-state">None</span></td>
+                                            <td><span id="uow-add-stored">No row</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Star Wars</b><br>Untracked object: memory price edited to 30.00</td>
+                                            <td>No entry</td>
+                                            <td>20.00 (unchanged)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Top Gun</b><br>Not loaded</td>
+                                            <td>No entry</td>
+                                            <td>18.00 (unchanged)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="s06-scope-controls"><button type="button" class="button s2-btn secondary"
+                                    data-uow="edit">Edit price + detect</button><button type="button"
+                                    class="button s2-btn secondary" data-uow="remove">Mark practice item for
+                                    deletion</button><button type="button" class="button s2-btn secondary"
+                                    data-uow="add">Add new practice item</button><button type="button"
+                                    class="button s2-btn primary" data-uow="save">Save all pending
+                                    changes</button><button type="button" class="button s2-btn secondary"
+                                    data-uow="reset">Reset example</button></div>
+                            <div class="s06-sim-feedback" role="status"><strong id="uow-feedback">No pending changes
+                                    yet. Prepare the three operations.</strong>
+                                <p id="uow-summary" class="small">No database writes so far.</p>
+                            </div>
+                            <div class="code-shell">
+                                <div class="code-head"><span>Illustrative SQL · one save</span><button
+                                        class="copy copy-btn" type="button">Copy code</button></div>
+                                <pre tabindex="0"><code id="uow-sql">No changes saved.</code></pre>
+                            </div>
+                        </div>
+                        <p><strong>What about other contexts?</strong> A second DbContext has a separate tracker, even
+                            if it connects to the same database. Saving the first context does not save pending changes
+                            in the second context.</p>
+                        <aside class="teacher-note s2-note"><img class="s2-note__mascot"
+                                src="images/db-mascot-teacher.webp" alt="" width="64" height="64">
+                            <div class="s2-note__content"><strong>Our current Console app</strong>
+                                <p>Each menu action creates a short-lived DbContext. In the example above, all three
+                                    operations deliberately use a single context to demonstrate a unit of work. One
+                                    successful save applies the pending changes; disposing without saving does not apply
+                                    them.</p>
+                            </div>
+                        </aside>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Common questions about saving</h2>
+                        <p>Check these small differences before moving on.</p>
+                        <details class="s2-details">
+                            <summary>Does SaveChanges save the entire database?</summary>
+                            <div class="reveal">
+                                <p>No. It saves pending tracked changes in this context across its DbSets. Unchanged
+                                    entries and objects not tracked by the context are not updated simply because they
+                                    were read.</p>
+                            </div>
+                        </details>
+                        <details class="s2-details">
+                            <summary>Why is there no SaveChanges after a normal read?</summary>
+                            <div class="reveal">
+                                <p>Reading only materialises data. An ordinary tracked query starts tracking but
+                                    normally does not create a pending write. SaveChanges with no pending changes
+                                    returns zero.</p>
+                            </div>
+                        </details>
+                        <details class="s2-details">
+                            <summary>Why are Add and Remove not awaited?</summary>
+                            <div class="reveal">
+                                <p>They normally register changes in memory. SaveChangesAsync performs the database
+                                    write. Some specialized key generation may need asynchronous AddAsync; the SQL
+                                    Server identity-key lab uses Add.</p>
+                            </div>
+                        </details>
+                        <details class="s2-details">
+                            <summary>What if I change the price and then call FindAsync for the same ID?</summary>
+                            <div class="reveal">
+                                <p>It can return the same locally tracked object, including a new price that has not
+                                    been saved. A separate no-tracking LINQ read can show the actual stored value.
+                                    SaveChanges is what makes the change persistent.</p>
+                            </div>
+                        </details>
+                        <details class="s2-details">
+                            <summary>What if SaveChanges returns zero or fails?</summary>
+                            <div class="reveal">
+                                <p>Zero may mean no pending detected changes (for example, assigning the same price).
+                                    The return value counts state entries written. On an exception, do not report
+                                    success; read the stored result and check the error. Do not confuse saving with a
+                                    schema migration.</p>
+                            </div>
+                        </details>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Data versus schema</h2>
+                        <p><code>SaveChangesAsync()</code> persists added, modified and deleted records. It does not
+                            create a new table or add columns to a model’s database schema. Schema changes are managed
+                            separately through migrations.</p>
+                    </div><label class="check"><input type="checkbox" id="step-check-6" data-save="step-check-6"><span>I
+                            can explain why changes in memory do not immediately change SQL Server.</span></label>
+                    <footer class="step-footer"><button class="button secondary s2-btn" data-prev>← Previous</button>
+                        <div class="step-actions"><button class="button s2-btn primary" data-complete="6"
+                                aria-pressed="false">✓ Mark step complete</button><button
+                                class="button secondary s2-btn" data-next>Next →</button></div>
+                    </footer>
+                </section>
+                <section class="lesson" id="s6-panel-7" aria-labelledby="s6-title-7" hidden>
+                    <div class="panel-head"><span class="section-kicker">STEP 08 / 08 · 20 MINUTES</span>
+                        <h1 id="s6-title-7" tabindex="-1">Challenge, review and submit</h1>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Independent challenge · 20-minute practice</h2>
+                        <p>Create a fresh practice record named <strong>Blade Runner 2049</strong>. Choose a valid price
+                            and stock. Do not edit a seed record. This time implement an inventory rule yourself.</p>
+                        <div class="s06-location"><strong>File</strong>
+                            <code>EF10_InventoryManager/CrudTasks.cs</code><br><strong>Method</strong>
+                            <code>UpdateStockAsync(db, id, newStock)</code> · TODO 05 · menu option 7
+                        </div>
+                        <ol>
+                            <li>Create the item and record the generated ID.</li>
+                            <li>Retrieve it by its key and handle null.</li>
+                            <li>Set Stock to the new value. Set IsActive to true when Stock is greater than zero,
+                                otherwise false.</li>
+                            <li>Save without Update(). Report the new values.</li>
+                            <li>Test stock 0, then a positive stock. Verify twice in SSMS. Capture evidence before
+                                deleting anything.</li>
+                        </ol>
+
+                        <details class="s2-details">
+                            <summary>Hint for the challenge</summary>
+                            <div class="reveal">
+                                <p>Use the same tracked update pattern, now with two property assignments. The
+                                    expression <code>newStock &gt; 0</code> returns a Boolean. You do not need two save
+                                    calls.</p>
+                            </div>
+                        </details>
+                        <p><strong>Expected:</strong> Stock 0 means IsActive false. A positive value means true. The
+                            database should show both values only after saving.</p><label for="challenge-id">My
+                            challenge item ID</label><input id="challenge-id" type="text" inputmode="numeric"
+                            data-save="challenge-id" placeholder="Real generated ID">
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Review quiz</h2>
+                        <p>Check your understanding before submitting. Answers and explanations are saved on this
+                            device.</p>
+                        <div id="exit-quiz"></div>
+                    </div>
+                    <div class="card s2-card">
+                        <h2>Competency checklist and evidence</h2>
+                        <p>Download the evidence template. Add your own screenshots and short explanations. Do not show
+                            passwords or other students' details.</p>
+                        <ul class="s06-checklist">
+                            <li><label class="check"><input type="checkbox" data-save="competency-0"><span>I retrieved
+                                        an existing and a missing key.</span></label></li>
+                            <li><label class="check"><input type="checkbox" data-save="competency-1"><span>I created an
+                                        item and captured its actual ID.</span></label></li>
+                            <li><label class="check"><input type="checkbox" data-save="competency-2"><span>I verified an
+                                        implicit update in SQL Server.</span></label></li>
+                            <li><label class="check"><input type="checkbox" data-save="competency-3"><span>I verified
+                                        cancellation and confirmed deletion.</span></label></li>
+                            <li><label class="check"><input type="checkbox" data-save="competency-4"><span>I explained
+                                        the tracking experiment and no-tracking result.</span></label></li>
+                            <li><label class="check"><input type="checkbox" data-save="competency-5"><span>I tested the
+                                        independent stock rule with both values.</span></label></li>
+                        </ul>
+                        <div class="button-row"><a class="button s2-btn primary" href="downloads/evidence.md" download>↓
+                                Evidence template</a><a class="button s2-btn secondary"
+                                href="downloads/CODE-EXPLAINED.md" download>Code explained</a></div><label
+                            for="reflection">My short reflection: why does a tracked entity not need
+                            Update()?</label><textarea rows="4" id="reflection" data-save="reflection"
+                            placeholder="Explain it in your own words."></textarea>
+                    </div>
+                    <section id="sources" class="s05-sources">
+                        <h2>Quick references and downloads</h2>
+                        <ul>
+                            <li><a href="downloads/EF10_Session06_Student_Starter.zip" download>Student starter ZIP</a>
+                            </li>
+                            <li><a href="downloads/setup-inventory.sql" download>SQL setup</a> · <a
+                                    href="downloads/verify-inventory.sql" download>verification script</a></li>
+                            <li><a href="downloads/START-HERE.md" download>Start here</a> · <a
+                                    href="downloads/CODE-EXPLAINED.md" download>Code explained</a> · <a
+                                    href="downloads/evidence.md" download>Evidence template</a></li>
+                            <li><a href="downloads/LINQ_Quick_Reference.pdf" target="_blank" rel="noopener">LINQ quick
+                                    reference from Session 05</a></li>
+                            <li><a href="downloads/CRUD_Quick_Reference.md" download>CRUD and state quick reference</a>
+                            </li>
+                        </ul>
+                        <details class="s2-details">
+                            <summary>Book references</summary>
+                            <div class="reveal">
+                                <p>Brian Gorman, <em>Practical Entity Framework Core 10</em>, Chapter 6, pp. 207–244,
+                                    Activity 6-1: Table 6-1 and Listings 6-3, 6-14, 6-19, 6-26–6-28. The exercises adapt
+                                    the book’s Category/Genre and related-data examples to a single Item, using its
+                                    inventory scenario and names.</p>
+                                <p>Jon P. Smith, <em>Entity Framework Core in Action</em>, Chapter 3, §3.1–3.3 and §3.5:
+                                    state, creating, updating and deleting entities.</p>
+                            </div>
+                        </details>
+                        <details class="s2-details">
+                            <summary>Further reading</summary>
+                            <div class="reveal">
+                                <ul>
+                                    <li><a href="https://learn.microsoft.com/en-us/ef/core/change-tracking/"
+                                            target="_blank" rel="noopener">EF Core change tracking</a></li>
+                                    <li><a href="https://learn.microsoft.com/en-us/ef/core/saving/basic" target="_blank"
+                                            rel="noopener">Basic saving</a></li>
+                                    <li><a href="https://learn.microsoft.com/en-us/ef/core/querying/tracking"
+                                            target="_blank" rel="noopener">Tracking versus no-tracking queries</a></li>
+                                </ul>
+                            </div>
+                        </details>
+                    </section><label class="check"><input type="checkbox" id="step-check-7"
+                            data-save="step-check-7"><span>I completed the independent challenge and prepared my
+                            evidence.</span></label>
+                    <footer class="step-footer"><button class="button secondary s2-btn" data-prev>← Previous</button>
+                        <div class="step-actions"><button class="button s2-btn primary" data-complete="7"
+                                aria-pressed="false">✓ Mark step complete</button><button
+                                class="button secondary s2-btn" data-next disabled>Next →</button></div>
+                    </footer>
+                </section>
+                <p class="page-foot">TVET Interactive Codelab Studio · Database Management · Session 06</p>
+            </main>
+        </div>
+    </div>
+    <div class="toast" id="s6-toast" role="status"></div>
+    <dialog id="s6-reset-dialog" aria-labelledby="s6-reset-title">
+        <h2 id="s6-reset-title">Reset Session 06?</h2>
+        <p>This clears this session’s saved progress, checkboxes, quiz choices and notes on this device.</p>
+        <div class="button-row">
+            <button class="button s2-btn primary" id="s6-confirm-reset" type="button">Reset Session 06</button><button
+                class="button secondary s2-btn" id="s6-cancel-reset" type="button">Keep my progress</button>
+        </div>
+    </dialog><noscript>
+        <p class="noscript">Enable JavaScript to navigate the codelab. The starter and references are available in the
+            downloads folder.</p>
+    </noscript>
+</body>
+
+</html>
